@@ -35,12 +35,12 @@ async function displayEmployees() {
     SELECT employees.id AS "Employee ID",
     employees.first_name AS "First Name",
     employees.last_name AS "Last Name",
-    roles.titles AS "Title",
-    departments.department_id AS "Department",
+    roles.title AS "Title",
+    departments.department_name AS "Department",
     roles.salary AS "Salary",
     CONCAT (manager.first_name, " ", manager.last_name, "") AS "Manager"
     FROM employees
-    LEFT JOIN roles ON (employees.role.id = roles.id)
+    LEFT JOIN roles ON (employees.role_id = roles.id)
     LEFT JOIN departments ON (roles.department_id = departments.id)
     LEFT JOIN employees manager ON employees.manager_id = manager.id;
     `;
