@@ -1,9 +1,17 @@
 const inquirer = require('inquirer');
-const express = require('express');
+// const express = require('express');
 const mysql = require('mysql2');
 
 //TODO connect to mysql database
-
+const db = mysql.createConnection(
+    {
+        host: '127.0.0.1',
+        user: 'root',
+        password: 'sqlThis',
+        database: 'employee_db'
+    },
+    console.log("Connecting to the employee_db.")
+);
 
 async function displayDepartments() {
     // TODO implement a function to select all departmentsfor mySql
