@@ -23,11 +23,12 @@ CREATE TABLE employees(
     first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL, 
     role_id INT,
-    department_id INT,
-    salary DECIMAL,
-    managers TEXT,
-    FOREIGN KEY
-    REFERENCES
+    FOREIGN KEY (role_id)
+    REFERENCES roles(id)
+    ON DELETE CASCADE,
+    manager_id INT,
+    FOREIGN KEY (manager_id)
+    REFERENCES employees(id)
     ON DELETE CASCADE
 );
 
