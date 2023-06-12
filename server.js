@@ -32,7 +32,11 @@ async function displayDepartments() {
     // });
 };
 
-
+async function displayRoles() {
+    db.query("SELECT * FROM roles", function (err, results) {
+        console.log(results);
+    });
+};
 
 
 async function handleOptions() {
