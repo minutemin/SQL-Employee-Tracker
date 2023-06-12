@@ -73,8 +73,11 @@ async function handleOptions() {
         displayDepartments();
         handleOptions();
     } else if (results.command == "View All Roles") {
-        // displayRoles();
-        // handleOptions();
+        displayRoles();
+        handleOptions();
+    } else if (results.command == "View All Employees") {
+        displayEmployees();
+        handleOptions();
     } 
     // TODO implement the rest of these
 }
