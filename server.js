@@ -15,7 +15,25 @@ const db = mysql.createConnection(
 
 async function displayDepartments() {
     // TODO implement a function to select all departmentsfor mySql
-}
+    db.query("SELECT * FROM departments", function (err, results) {
+        console.log(results);
+    });
+
+    // db.query(sql, (err, rows) => {
+    //     if (err) {
+    //         res.status(500).json({ error: err.message});
+    //         return;
+    //     }   
+    //     console.log(rows);
+    //     res.json({
+    //         message: "success",
+    //         data: rows
+    //     }); 
+    // });
+};
+
+
+
 
 async function handleOptions() {
     const options = [
