@@ -48,7 +48,7 @@ async function displayEmployees() {
         if (err) {
             console.log(err);
         }
-        console.table(results);
+        console.log(results);
     });
 }
 

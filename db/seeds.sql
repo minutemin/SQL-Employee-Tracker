@@ -19,9 +19,9 @@ VALUES ("Manager", 175000, 1),
 
 INSERT INTO employees (first_name, last_name, role_id, manager_id)
 VALUES ("Barry", "Beredee", 1, 1),
-       ("Sally", "Golong", 1, 2),
+       ("Ron", "Golong", 1, 2),
        ("Bob", "Loblaw", 1, 3),
-       ("Cynthia", "Beginning", 1, 4),
+       ("Cynthia", "Biggenning", 1, 4),
        ("Courtney", "Act", 2, 1),
        ("Penny", "Furerthots", 2, 1),
        ("Sam", "Eyam", 3, 1),
@@ -31,6 +31,6 @@ VALUES ("Barry", "Beredee", 1, 1),
        ("Nancy", "Fancypants", 5, 2),
        ("Lottie", "Dottieda", 5, 2),
        ("Kitty", "Sanchez", 6, 3),
-       ("Bud", "Cort", 7, 3),
+       ("Bud", "Dorvaise", 7, 3),
        ("Mary", "Doyuanna", 8, 4),
-       ("Darren", "Teccarrisk", 9, 4);
+       ("Darren", "Tekkarris", 9, 4);
