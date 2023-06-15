@@ -52,8 +52,8 @@ async function displayEmployees() {
     });
 }
 
-async function handleDepartment() {
-    const deptQuestions = await inquirer.prompt ([
+async function addDept() {
+    const addDeptQuestions = await inquirer.prompt ([
         {
             type: "input",
             name: "newDept",
@@ -61,7 +61,7 @@ async function handleDepartment() {
         }
     ]);
     const sql = "INSERT INTO departments (department_name) VALUES (?)";
-    const params = deptQuestions.newDept;
+    const params = addDeptQuestions.newDept;
 
     db.query(sql, params, (err, results) => {
         if (err) {
@@ -71,6 +71,40 @@ async function handleDepartment() {
         handleOptions();
     });
 }
+
+async function addRole() {
+    const addRoleQuestion = await inquirer.prompt ([
+        {
+            type: "input",
+            name: "newRole",
+            message: "What is role do you want to add"
+        }
+    ]);
+    const sql = "INSERT INTO roles (role_name) VALUES (?)";
+    const params = addRoleQuestion.newRole;
+
+    db.query(sql, params, (err, results) => {
+        if (err) {
+            console.log(err);
+        }
+        console.table(results);
+        handleOptions();
+    });
+}
+
+// async function deleteDeptName() {
+//     const deleteDeptQuestion = await inquirer.prompt ([
+//         {
+//             type: "list",
+//             name: "deleteDept",
+//             message: "What department do you want to delete?",
+//             choices: options,
+            
+//         }
+//     ])
+// }
+
+
 
 async function handleOptions() {
     const options = [
@@ -102,7 +136,8 @@ async function handleOptions() {
         displayEmployees();
         handleOptions();
     } else if (results.command == "Add a Department") {
-        handleDepartment();
+        addDept();
+        handleOptions();
     } 
     // TODO implement the rest of these
 }   
