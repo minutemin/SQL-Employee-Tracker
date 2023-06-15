@@ -18,6 +18,7 @@ async function displayDepartments() {
             console.log(err);
         } 
         console.table(results);
+        handleOptions();
     });
 }
 
@@ -27,6 +28,7 @@ async function displayRoles() {
             console.log(err);
         } 
         console.table(results);
+        handleOptions();
     });
 }
 
@@ -49,6 +51,7 @@ async function displayEmployees() {
             console.log(err);
         }
         console.table(results);
+        handleOptions();
     });
 }
 
@@ -73,17 +76,31 @@ async function addDept() {
 }
 
 async function addRole() {
+
+    // const deptList = await db.promise().query("SELECT * FROM departments");
+
     const addRoleQuestion = await inquirer.prompt ([
         {
             type: "input",
-            name: "newRole",
-            message: "What is role do you want to add"
+            name: "title",
+            message: "What is the title of the new role?"
+        },
+        {
+            type: "input",
+            name: "salary",
+            message: "What is the salary of this postion?"
+        },
+        {
+            type: "list",
+            name: "department_id",
+            message: "What is the department this role belongs to?",
+            choices: await db.promise().query("SELECT * FROM departments")
         }
     ]);
-    const sql = "INSERT INTO roles (role_name) VALUES (?)";
-    const params = addRoleQuestion.newRole;
+    const sql = "INSERT INTO roles SET ?";
+    
 
-    db.query(sql, params, (err, results) => {
+    db.query(sql, addRoleQuestion, (err, results) => {
         if (err) {
             console.log(err);
         }
@@ -92,17 +109,6 @@ async function addRole() {
     });
 }
 
-// async function deleteDeptName() {
-//     const deleteDeptQuestion = await inquirer.prompt ([
-//         {
-//             type: "list",
-//             name: "deleteDept",
-//             message: "What department do you want to delete?",
-//             choices: options,
-            
-//         }
-//     ])
-// }
 
 
 
@@ -128,17 +134,15 @@ async function handleOptions() {
 
     if (results.command == "View All Departments") {
         displayDepartments();
-        handleOptions();
     } else if (results.command == "View All Roles") {
         displayRoles();
-        handleOptions();
     } else if (results.command == "View All Employees") {
         displayEmployees();
-        handleOptions();
     } else if (results.command == "Add a Department") {
         addDept();
-        handleOptions();
-    } 
+    } else if (results.command == "Add a Role") {
+        addRole();
+    }
     // TODO implement the rest of these
 }   
 
@@ -147,58 +151,17 @@ handleOptions();
 
 /*
 
-const promptForMissingOptions = async (options) => {
-    const questions = [
-      {
-        type: "input",
-        name: "name",
-        message: "Name:",
-        when: () => options.name,
-      },
-      {
-        type: "checkbox",
-        name: "lots",
-        message: "Select the categories:",
-        when: () => options.file,
-        pageSize: 30,
-        choices: () => options.categoryChoices,
-      },
-      {
-        type: "checkbox",
-        name: "files",
-        message: "Select the files:",
-        when: () => answers.lots.length,
-        pageSize: 50,
-        choices: (answers) => {
-          const filteredList = [];
-          const selectedCategories = answers.lots; // where the ID is the relevant question's "name".
-          // now do your "filter" handling here..
-          return filteredList;
-        },
-      },
-    ];
-  
-    const answers = await inquirer.prompt(questions);
-  
-    return {
-      files: options.file ? [options.file] : answers.files,
-      name: options.name || answers.name,
-    };
-  };
-  
-  let options = await promptForMissingOptions(options);
-
-      const resQuestions = async (options) => {[
+async function deleteDeptName() {
+    const deleteDeptQuestion = await inquirer.prompt ([
         {
-            type: "input",
-            name: "department",
-            message: "What is the name of the department you want to add?",
-        },
-    ]}
-
-
-
-
+            type: "list",
+            name: "deleteDept",
+            message: "What department do you want to delete?",
+            choices: options,
+            
+        }
+    ])
+}
 
 
 
