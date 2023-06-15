@@ -48,7 +48,27 @@ async function displayEmployees() {
         if (err) {
             console.log(err);
         }
-        console.log(results);
+        console.table(results);
+    });
+}
+
+async function handleDepartment() {
+    const deptQuestions = await inquirer.prompt ([
+        {
+            type: "input",
+            name: "newDept",
+            message: "What is the name of the Department you want to add?"
+        }
+    ]);
+    const sql = "INSERT INTO departments (department_name) VALUES (?)";
+    const params = deptQuestions.newDept;
+
+    db.query(sql, params, (err, results) => {
+        if (err) {
+            console.log(err);
+        }
+        console.table(results);
+        handleOptions();
     });
 }
 
@@ -63,12 +83,15 @@ async function handleOptions() {
         "Update an Employee's Role"
     ]
 
-    const results = await inquirer.prompt([{
-        message: "What would you like to do?",
-        name: "command",
-        type: "list",
-        choices: options,
-    }]);
+    const results = await inquirer.prompt([
+        {
+            type: "list",
+            name: "command",
+            message: "what would you like to do?",
+            choices: options,
+        },
+    ]);
+
     if (results.command == "View All Departments") {
         displayDepartments();
         handleOptions();
@@ -78,8 +101,72 @@ async function handleOptions() {
     } else if (results.command == "View All Employees") {
         displayEmployees();
         handleOptions();
+    } else if (results.command == "Add a Department") {
+        handleDepartment();
     } 
     // TODO implement the rest of these
-}
+}   
 
 handleOptions();
+
+
+/*
+
+const promptForMissingOptions = async (options) => {
+    const questions = [
+      {
+        type: "input",
+        name: "name",
+        message: "Name:",
+        when: () => options.name,
+      },
+      {
+        type: "checkbox",
+        name: "lots",
+        message: "Select the categories:",
+        when: () => options.file,
+        pageSize: 30,
+        choices: () => options.categoryChoices,
+      },
+      {
+        type: "checkbox",
+        name: "files",
+        message: "Select the files:",
+        when: () => answers.lots.length,
+        pageSize: 50,
+        choices: (answers) => {
+          const filteredList = [];
+          const selectedCategories = answers.lots; // where the ID is the relevant question's "name".
+          // now do your "filter" handling here..
+          return filteredList;
+        },
+      },
+    ];
+  
+    const answers = await inquirer.prompt(questions);
+  
+    return {
+      files: options.file ? [options.file] : answers.files,
+      name: options.name || answers.name,
+    };
+  };
+  
+  let options = await promptForMissingOptions(options);
+
+      const resQuestions = async (options) => {[
+        {
+            type: "input",
+            name: "department",
+            message: "What is the name of the department you want to add?",
+        },
+    ]}
+
+
+
+
+
+
+
+
+
+    */
