@@ -77,7 +77,7 @@ async function addDept() {
 
 async function addRole() {
 
-    // const deptList = await db.promise().query("SELECT * FROM departments");
+    const deptList = await db.promise().query("SELECT * FROM departments");
 
     const addRoleQuestion = await inquirer.prompt ([
         {
@@ -94,12 +94,13 @@ async function addRole() {
             type: "list",
             name: "department_id",
             message: "What is the department this role belongs to?",
-            choices: await db.promise().query("SELECT * FROM departments")
+            // ERROR is showing up as undefined for the list of departments
+            choices: deptList
         }
     ]);
+
     const sql = "INSERT INTO roles SET ?";
     
-
     db.query(sql, addRoleQuestion, (err, results) => {
         if (err) {
             console.log(err);
@@ -109,6 +110,46 @@ async function addRole() {
     });
 }
 
+async function addEmployee() {
+
+    const employeeList = await db.promise().query("SELECT * FROM employees");
+    const rolesList = await db.promise().query("SELECT * FROM roles");
+
+    const addEmployeeQuestion = await inquirer.prompt ([
+        {
+            type: "input",
+            name: "first_name",
+            message: "What is the first name of the new Employee?"
+        },
+        {
+            type: "input",
+            name: "last_name",
+            message: "What is the last name of the new Employee?"
+        },
+        {
+            type: "list",
+            name: "role_id",
+            message: "What is the role of the new Employee?",
+            choices: [rolesList]
+        },
+        {
+            type: "list",
+            name: "manager_id",
+            message: "Who is the manager of this new Employee?",
+            choices: [employeeList]
+        }
+    ]);
+    const sql = "INSERT INTO employees SET ?";
+    
+    db.query(sql, addEmployeeQuestion, (err, results) => {
+        if (err) {
+            console.log(err);
+        }
+        console.table(results);
+        handleOptions();
+    });
+
+}
 
 
 
@@ -119,7 +160,7 @@ async function handleOptions() {
         "View All Employees",
         "Add a Department",
         "Add a Role",
-        "Add a Employee",
+        "Add an Employee",
         "Update an Employee's Role"
     ]
 
@@ -142,6 +183,8 @@ async function handleOptions() {
         addDept();
     } else if (results.command == "Add a Role") {
         addRole();
+    } else if (results.command == "Add an employee") {
+        addEmployee();
     }
     // TODO implement the rest of these
 }   
