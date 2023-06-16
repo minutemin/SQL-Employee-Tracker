@@ -78,11 +78,14 @@ async function addDept() {
 async function addRole() {
 
     const [deptList] = await db.promise().query("SELECT * FROM departments");
+    // Create another variable to loop using map through the deptList and destructer the objects {} 
     const showCase = deptList.map(({ id, department_name }) => ({
+        // list the objects you want to list here
         name: department_name,
         value: id,
-    }));
-    console.log(deptList);
+        })
+    );
+    // console.log(deptList);
     const addRoleQuestion = await inquirer.prompt ([
         {
             type: "input",
@@ -98,7 +101,6 @@ async function addRole() {
             type: "list",
             name: "department_id",
             message: "What is the department this role belongs to?",
-            // ERROR is showing up as undefined for the list of departments
             choices: showCase
         }
     ]);
@@ -115,9 +117,21 @@ async function addRole() {
 }
 
 async function addEmployee() {
+    const [rolesList] = await db.promise().query("SELECT * FROM roles");
+    const showroles = rolesList.map(({ id, title }) =>
+        ({
+            name: title,
+            value: id,
+        })
+    );
 
-    const employeeList = await db.promise().query("SELECT * FROM employees");
-    const rolesList = await db.promise().query("SELECT * FROM roles");
+    const [employeeList] = await db.promise().query("SELECT * FROM employees");
+    const showEmp = employeeList.map(({ id, first_name, last_name, }) =>
+        ({
+            name: first_name + " " + last_name,
+            value: id,
+        })
+    );
 
     const addEmployeeQuestion = await inquirer.prompt ([
         {
@@ -134,13 +148,13 @@ async function addEmployee() {
             type: "list",
             name: "role_id",
             message: "What is the role of the new Employee?",
-            choices: [rolesList]
+            choices: showroles
         },
         {
             type: "list",
             name: "manager_id",
             message: "Who is the manager of this new Employee?",
-            choices: [employeeList]
+            choices: showEmp
         }
     ]);
     const sql = "INSERT INTO employees SET ?";
