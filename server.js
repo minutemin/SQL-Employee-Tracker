@@ -77,8 +77,12 @@ async function addDept() {
 
 async function addRole() {
 
-    const deptList = await db.promise().query("SELECT * FROM departments");
-
+    const [deptList] = await db.promise().query("SELECT * FROM departments");
+    const showCase = deptList.map(({ id, department_name }) => ({
+        name: department_name,
+        value: id,
+    }));
+    console.log(deptList);
     const addRoleQuestion = await inquirer.prompt ([
         {
             type: "input",
@@ -95,7 +99,7 @@ async function addRole() {
             name: "department_id",
             message: "What is the department this role belongs to?",
             // ERROR is showing up as undefined for the list of departments
-            choices: deptList
+            choices: showCase
         }
     ]);
 
@@ -183,7 +187,7 @@ async function handleOptions() {
         addDept();
     } else if (results.command == "Add a Role") {
         addRole();
-    } else if (results.command == "Add an employee") {
+    } else if (results.command == "Add an Employee") {
         addEmployee();
     }
     // TODO implement the rest of these
