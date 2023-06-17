@@ -159,6 +159,7 @@ async function addEmployee() {
     ]);
     const sql = "INSERT INTO employees SET ?";
     
+    
     db.query(sql, addEmployeeQuestion, (err, results) => {
         if (err) {
             console.log(err);
@@ -202,9 +203,10 @@ async function updateEmployee() {
             choices: showRoles
         }
     ]);
-    const sql = "UPDATE employees SET title = ? WHERE id = ?";
+    const sql = "UPDATE employees SET role_id = ? WHERE id = ?";
+    const params = [updateEmpQuestions.role_id, updateEmpQuestions.id]
 
-    db.query(sql, updateEmpQuestions, (err, results) => {
+    db.query(sql, params, (err, results) => {
         if (err) {
             console.log(err);
         }
