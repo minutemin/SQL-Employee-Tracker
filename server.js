@@ -215,6 +215,37 @@ async function updateEmployee() {
     });
 }
 
+async function deleteEmployee() {
+    const [empList] = await db.promise().query("SELECT * FROM employees");
+    const showEmps = empList.map(({ id, first_name, last_name}) => ({
+        name: first_name + last_name,
+        value: id,
+        })
+    );
+
+    const deleteQuestion = await inquirer.prompt ([
+        {
+            type: "list",
+            name: "id",
+            message: "Which Employee do you want to delete?",
+            choices: showEmps
+            
+        }
+    ]);
+
+    const sql = "DELETE FROM employees WHERE id = ?";
+    const params = deleteQuestion.id;
+
+    db.query(sql, params, (err, results) => {
+        if (err) {
+            console.log(err);
+        }
+        console.table(results);
+        handleOptions();
+    });
+}
+
+
 async function handleOptions() {
     const options = [
         "View All Departments",
@@ -224,6 +255,7 @@ async function handleOptions() {
         "Add a Role",
         "Add an Employee",
         "Update an Employee's Role", 
+        "Delete an Employee"
     ]
 
     const results = await inquirer.prompt([
@@ -249,6 +281,8 @@ async function handleOptions() {
         addEmployee();
     } else if (results.command == "Update an Employee's Role") {
         updateEmployee();
+    } else if (results.command == "Delete an Employee") {
+        deleteEmployee();
     }
  
 }   
