@@ -18,6 +18,7 @@ async function displayDepartments() {
         if (err) {
             console.log(err);
         } 
+        console.log("Here is a table of all of the Departments");
         console.table(results);
         handleOptions();
     });
