@@ -18,7 +18,7 @@ async function displayDepartments() {
         if (err) {
             console.log(err);
         } 
-        console.log("Here is a table of all of the Departments");
+        console.log("List of the Departments:");
         console.table(results);
         handleOptions();
     });
@@ -29,6 +29,7 @@ async function displayRoles() {
         if (err) {
             console.log(err);
         } 
+        console.log("List of Roles:");
         console.table(results);
         handleOptions();
     });
@@ -49,10 +50,12 @@ async function displayEmployees() {
     LEFT JOIN departments ON (roles.department_id = departments.id)
     LEFT JOIN employees manager ON employees.manager_id = manager.id;
     `;
+
     db.query(sql, function (err, results) {
         if (err) {
             console.log(err);
         }
+        console.log("List of Employees:");
         console.table(results);
         handleOptions();
     });
@@ -76,8 +79,9 @@ async function addDept() {
         if (err) {
             console.log(err);
         }
+        console.log(`Department ${addDeptQuestions.newDept} has been added to the database!`);
         console.table(results);
-        handleOptions();
+        displayDepartments();
     });
 }
 // functio to add new roles to the roles table
@@ -117,8 +121,9 @@ async function addRole() {
         if (err) {
             console.log(err);
         }
+        console.log(`${addRoleQuestion.title} has been added to the database!`)
         console.table(results);
-        handleOptions();
+        displayRoles();
     });
 }
 // function for adding new employees
@@ -174,8 +179,9 @@ async function addEmployee() {
         if (err) {
             console.log(err);
         }
+        console.log(`${addEmployeeQuestion.first_name} ${addEmployeeQuestion.last_name} has been added to the database!`);
         console.table(results);
-        handleOptions();
+        displayEmployees();
     });
 
 }
@@ -218,14 +224,17 @@ async function updateEmployee() {
     const sql = "UPDATE employees SET role_id = ? WHERE id = ?";
     const params = [updateEmpQuestions.role_id, updateEmpQuestions.id]
 
+    console.log()
     db.query(sql, params, (err, results) => {
         if (err) {
             console.log(err);
         }
+        console.log(`Employee #${updateEmpQuestions.id}'s role has been updated to role ${updateEmpQuestions.role_id}`);
         console.table(results);
-        handleOptions();
+        displayEmployees();
     });
 }
+
 // BONUS function to delete an Employee
 async function deleteEmployee() {
     const [empList] = await db.promise().query("SELECT * FROM employees");
@@ -252,14 +261,16 @@ async function deleteEmployee() {
         if (err) {
             console.log(err);
         }
+        console.log(`Employee ${deleteQuestion.id} has been deleted from the database!`)
         console.table(results);
-        handleOptions();
+        displayEmployees();
     });
 }
+
 // BONUS function to delete a Role!
 async function deleteRole() {
-    const [empList] = await db.promise().query("SELECT * FROM roles");
-    let showRoles = empList.map(({ id, title}) => ({
+    const [roleList] = await db.promise().query("SELECT * FROM roles");
+    let showRoles = roleList.map(({ id, title}) => ({
         name: title,
         value: id,
         })
@@ -282,14 +293,15 @@ async function deleteRole() {
         if (err) {
             console.log(err);
         }
+        console.log(`Role ${deleteQuestion.id} has been deleted from the database` )
         console.table(results);
-        handleOptions();
+        displayRoles();
     });
 }
 // BONUS function for deleting Departments
 async function deleteDepartment() {
-    const [empList] = await db.promise().query("SELECT * FROM departments");
-    let showDept = empList.map(({ id, department_name}) => ({
+    let [depList] = await db.promise().query("SELECT * FROM departments");
+    let showDept = depList.map(({ id, department_name}) => ({
         name: department_name,
         value: id,
         })
@@ -312,11 +324,11 @@ async function deleteDepartment() {
         if (err) {
             console.log(err);
         }
+        console.log(`Department ${deleteQuestion.id} has been removed from the database!`)
         console.table(results);
-        handleOptions();
+        displayDepartments();
     });
 }
-
 
 // function to prompt the main menu
 async function handleOptions() {
