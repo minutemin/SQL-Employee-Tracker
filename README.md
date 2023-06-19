@@ -4,7 +4,7 @@ SQL - SQL Employee Tracker
 
 Git Hub: https://github.com/minutemin/homework-12-SQL-Employee-Tracker
 
-Video Link: https://drive.google.com/file/d/1tXcLdr7iw6XmnPMx7VYgQ0G93zGpoQ8A/view
+Video Link: https://drive.google.com/file/d/1i55Fch5BTK0t3MGreec9qwqCUndK83So/view
 
 ## Badges
 ![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)
