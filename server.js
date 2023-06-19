@@ -315,6 +315,8 @@ async function deleteDepartment() {
         handleOptions();
     });
 }
+
+
 // function to prompt the main menu
 async function handleOptions() {
     const options = [
@@ -361,23 +363,46 @@ async function handleOptions() {
         deleteDepartment();
     }   
 }
-handleOptions();
 
+handleOptions();
 
 
 /*
 
-    switch (results) {
-        case "View All Departments":
-            return `displayDepartments();`
-        case "View All Roles":
-            return displayRoles();
-        case "View All Employees":
-            return displayEmployees();
-        case "Add a Department":
-            return addDept();
-        case "Add a Role":
-            return addRole();
-    }
+async function handleOptions() {
+    const results = await inquirer.prompt([
+        {
+            type: "list",
+            name: "command",
+            message: "what would you like to do?",
+            choices: options,
+        },
+    ]);
+    switch (results.command) {
+                case "View All Departments":
+                    displayDepartments();
+                case "View All Roles":
+                    displayRoles();
+                case "View All Employees":
+                    displayEmployees();
+                case "Add a Department":
+                    addDept();
+                case "Add a Role":
+                    addRole();
+                case "Add an Employee":
+                    addEmployee();
+                case "Update an Employee's Role":
+                    updateEmployee();
+                case "Delete an Employee":
+                    deleteEmployee();
+                case "Delete a Role":
+                    deleteRole();
+                case "Delete a Department":
+                    deleteDepartment();
+        }
+  
+}
+handleOptions();
 
-    */
+*/
+    
