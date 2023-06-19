@@ -84,7 +84,7 @@ async function addRole() {
     // create in [] a variable that awaits a promise query to list all of the departments from the departments table
     const [deptList] = await db.promise().query("SELECT * FROM departments");
     // create another variable to loop using map through the deptList and destruct the objects {} 
-    const showCase = deptList.map(({ id, department_name }) => ({
+    let showDept = deptList.map(({ id, department_name }) => ({
         // list the objects you want to listed here
         name: department_name,
         value: id,
@@ -106,7 +106,7 @@ async function addRole() {
             type: "list",
             name: "department_id",
             message: "What is the department this role belongs to?",
-            choices: showCase
+            choices: showDept
         }
     ]);
     // variable for sql for the insert prepared statement for the roles table
@@ -125,7 +125,7 @@ async function addEmployee() {
     // create in [] a variable that awaits a promise query to list all of the roles from the roles table
     const [rolesList] = await db.promise().query("SELECT * FROM roles");
     // create another variable to loop using map through the roles list and destruct the objects {} 
-    const showRoles = rolesList.map(({ id, title }) =>
+    let showRoles = rolesList.map(({ id, title }) =>
         ({
             name: title,
             value: id,
@@ -134,7 +134,7 @@ async function addEmployee() {
     // create in [] a variable that awaits a promise query to list all of the employees from the employees table
     const [employeeList] = await db.promise().query("SELECT * FROM employees");
     // create another variable to loop using map through the employees list and destruct the objects {} 
-    const showEmp = employeeList.map(({ id, first_name, last_name, }) =>
+    let showEmp = employeeList.map(({ id, first_name, last_name, }) =>
         ({
             name: first_name + " " + last_name,
             value: id,
@@ -183,21 +183,22 @@ async function updateEmployee() {
     // create in [] a variable that awaits a promise query to list all of the employees from the employees table
     const [employeeList] = await db.promise().query("SELECT * FROM employees");
     // create another variable to loop using map through the employee's list and destruct the objects {} 
-    const showEmp = employeeList.map(({ id, first_name, last_name, }) =>
+    let showEmp = employeeList.map(({ id, first_name, last_name, }) =>
         ({
             name: first_name + " " + last_name,
             value: id,
         })
     );
-
+    // create in [] a variable that awaits a promise query to list all of the roles from the roles table
     const [rolesList] = await db.promise().query("SELECT * FROM roles");
-    const showRoles = rolesList.map(({ id, title }) =>
+    // create another variable to loop using map through the role's list and destruct the objects {} 
+    let showRoles = rolesList.map(({ id, title }) =>
         ({
             name: title,
             value: id,
         })
     );
-
+    // prompt questions with inquirer to ask for employee and role updates
     const updateEmpQuestions = await inquirer.prompt ([
         {
             type: "list",
@@ -212,6 +213,7 @@ async function updateEmployee() {
             choices: showRoles
         }
     ]);
+    // update prepared statement for employees role
     const sql = "UPDATE employees SET role_id = ? WHERE id = ?";
     const params = [updateEmpQuestions.role_id, updateEmpQuestions.id]
 
@@ -223,16 +225,16 @@ async function updateEmployee() {
         handleOptions();
     });
 }
-
+// BONUS function to delete an Employee
 async function deleteEmployee() {
     const [empList] = await db.promise().query("SELECT * FROM employees");
-    const showEmps = empList.map(({ id, first_name, last_name}) => ({
+    let showEmps = empList.map(({ id, first_name, last_name}) => ({
         name: first_name + last_name,
         value: id,
         })
     );
 
-    const deleteQuestion = await inquirer.prompt ([
+    let deleteQuestion = await inquirer.prompt ([
         {
             type: "list",
             name: "id",
@@ -253,7 +255,67 @@ async function deleteEmployee() {
         handleOptions();
     });
 }
+// BONUS function to delete a Role!
+async function deleteRole() {
+    const [empList] = await db.promise().query("SELECT * FROM roles");
+    let showRoles = empList.map(({ id, title}) => ({
+        name: title,
+        value: id,
+        })
+    );
 
+    let deleteQuestion = await inquirer.prompt ([
+        {
+            type: "list",
+            name: "id",
+            message: "Which Role do you want to delete?",
+            choices: showRoles
+            
+        }
+    ]);
+
+    const sql = "DELETE FROM roles WHERE id = ?";
+    const params = deleteQuestion.id;
+
+    db.query(sql, params, (err, results) => {
+        if (err) {
+            console.log(err);
+        }
+        console.table(results);
+        handleOptions();
+    });
+}
+// BONUS function for deleting Departments
+async function deleteDepartment() {
+    const [empList] = await db.promise().query("SELECT * FROM departments");
+    let showDept = empList.map(({ id, department_name}) => ({
+        name: department_name,
+        value: id,
+        })
+    );
+
+    let deleteQuestion = await inquirer.prompt ([
+        {
+            type: "list",
+            name: "id",
+            message: "Which Department do you want to delete?",
+            choices: showDept
+            
+        }
+    ]);
+
+    const sql = "DELETE FROM departments WHERE id = ?";
+    const params = deleteQuestion.id;
+
+    db.query(sql, params, (err, results) => {
+        if (err) {
+            console.log(err);
+        }
+        console.table(results);
+        handleOptions();
+    });
+}
+// function to prompt the main menu
 async function handleOptions() {
     const options = [
         "View All Departments",
@@ -263,7 +325,9 @@ async function handleOptions() {
         "Add a Role",
         "Add an Employee",
         "Update an Employee's Role", 
-        "Delete an Employee"
+        "Delete an Employee",
+        "Delete a Role",
+        "Delete a Department"
     ]
 
     const results = await inquirer.prompt([
@@ -291,10 +355,29 @@ async function handleOptions() {
         updateEmployee();
     } else if (results.command == "Delete an Employee") {
         deleteEmployee();
-    }
- 
-}   
-
+    } else if (results.command == "Delete a Role") {
+        deleteRole();
+    } else if (results.command == "Delete a Department") {
+        deleteDepartment();
+    }   
+}
 handleOptions();
 
 
+
+/*
+
+    switch (results) {
+        case "View All Departments":
+            return `displayDepartments();`
+        case "View All Roles":
+            return displayRoles();
+        case "View All Employees":
+            return displayEmployees();
+        case "Add a Department":
+            return addDept();
+        case "Add a Role":
+            return addRole();
+    }
+
+    */
